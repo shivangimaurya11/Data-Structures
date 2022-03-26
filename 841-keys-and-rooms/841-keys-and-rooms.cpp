@@ -1,22 +1,29 @@
-typedef vector<vector<int>> vvi;
-typedef vector<int> vi;
+#define vv vector<vector<int>>
+#define v vector<int>
 class Solution {
 public:
-    public:
-    void dfs(vvi &adj, int i, vi &visited) {
-        visited[i] = 1;
-        for(auto x: adj[i]) {
-            if(visited[x]==0) dfs(adj, x, visited);
+    void dfs(vv &rooms,v &vis,int node)
+    {
+        vis[node]=1;
+        for(auto it:rooms[node])
+        {
+            if(vis[it]==0)
+                dfs(rooms,vis,it);
         }
     }
     bool canVisitAllRooms(vector<vector<int>>& rooms) {
-        int n = rooms.size();
-        vi visited(n);
+        int n=rooms.size();
+        v vis(n,0);
+        dfs(rooms,vis,0);
+        for(auto i:vis)
+        {
+            if(i==0)
+            {
         
-        dfs(rooms, 0, visited);
-        for(auto x: visited) {
-            if(x==0) return false;
+                return false;
+            }
         }
         return true;
+        
     }
 };
