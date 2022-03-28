@@ -4,55 +4,74 @@ using namespace std;
 
  // } Driver Code Ends
 
-typedef pair<int,int>  pi;
+   class Node{
+    
+    public:
+    int u,v,wt;
+    Node(int first,int second,int weight){
+        u = first;
+        v = second;
+        wt = weight;
+    }
+};
+class Compare{
+    public:
+    inline bool operator()(Node &a,Node &b){
+        return a.wt<b.wt;
+    }
+};
 class Solution
 {
 	public:
 	//Function to find sum of weights of edges of the Minimum Spanning Tree.
+	 
+	int findPar(int u,vector<int> &parent){
+	    if(u == parent[u]){
+	        return u;
+	    }
+	    return parent[u] = findPar(parent[u],parent);
+	}
+	int unite(int u,int v,vector<int> &parent,vector<int> &rank){
+	    u = findPar(u,parent);
+	    v = findPar(v,parent);
+	    if(rank[u] == rank[v]){
+	        rank[u] += 1;
+	        parent[v] = u;
+	    }
+	    else if(rank[u]>rank[v]){
+	        parent[u] = v;
+	    }
+	    else{
+	        parent[v] = u;
+	    }
+	}
     int spanningTree(int V, vector<vector<int>> adj[])
     {
-        int key[V];
-        int parent[V];
-        bool MST[V];
-           for(int i=0;i<V;i++)
-        {
-          key[i]=INT_MAX;
-          MST[i]=false;
-          parent[i]=-1;
+       
+        
+        int cost = 0;
+        vector<int> rank(V);
+        vector<int> parent(V);
+        vector<pair<int,int>> mstSet;
+        for(int i=0; i<V; i++){
+            rank[i] = 0;
+            parent[i] = i;
         }
-        key[0]=0;
-        parent[0]=-1;
-        MST[0]=true;
-        priority_queue<pi,vector<pi>,greater<pi>>pq;
-        pq.push(make_pair(0,0));
-        while(!pq.empty())
-        {
-            int u=pq.top().second;
-            pq.pop();
-            MST[u]=true;
-            
-                for(auto it:adj[u])
-                {
-                    int v=it[0];
-                    int w=it[1];
-                    if(MST[v]==false && w<key[v])
-                    {
-                        parent[v]=u;
-                        key[v]=w;
-                        pq.push(make_pair(key[v],v));
-                    }
-                }
-            
+        vector<Node> edges;
+        for(int i=0; i<V; i++){
+            for(auto vec:adj[i]){
+                edges.push_back(Node(i,vec[0],vec[1]));
+            }
         }
-        int sum=0;
-           for(int i=0;i<V;i++ )
-      {
-          
-          if(key[i]!=INT_MAX)
-          sum=sum+key[i];
-          
-      }
-        return sum;
+        sort(edges.begin(),edges.end(),Compare());
+        for(auto it:edges){
+            if(findPar(it.u,parent) != findPar(it.v,parent)){
+                mstSet.push_back(make_pair(it.u,it.v));
+                unite(it.u,it.v,parent,rank);
+                cost += it.wt;
+            }
+        }
+        return cost;
     }
 };
 
