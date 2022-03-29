@@ -1,32 +1,29 @@
 class Solution {
-    void dfs(int node,vector<int> &vis,vector<vector<int> > &v){
+public:
+    void dfs(int node,vector<vector<int>>&adj,vector<int>&vis)
+    {
         vis[node]=1;
-        for(auto child:v[node]){
-            if(vis[child]==0){
-                dfs(child,vis,v);
-            }
+        for(auto it:adj[node])
+        {
+            if(!vis[it])
+                dfs(it,adj,vis);
         }
     }
-public:
-    bool validPath(int n, vector<vector<int>>& edges, int start, int end) {
-        int i;
-        vector<int>vis(n,0);
-        vector<vector<int> >v(n);
-        for(i=0;i<edges.size();i++){
-            v[edges[i][0]].push_back(edges[i][1]);
-            v[edges[i][1]].push_back(edges[i][0]);
-            
+    bool validPath(int n, vector<vector<int>>& edges, int source, int destination) {
+        vector<vector<int>>adj(n);
+        for(int i=0;i<edges.size();i++)
+        {
+            adj[edges[i][0]].push_back(edges[i][1]);
+            adj[edges[i][1]].push_back(edges[i][0]);
         }
-        for(i=0;i<n;i++){
-            if(vis[start]==0){
-                dfs(start,vis,v);
-                if(vis[end]==0){
-                    return false;
-                }
-                
-            }
+        vector<int>vis(n,0);
+        for(int i=0;i<n;i++)
+        {
+            if(!vis[source])
+                dfs(source,adj,vis);
+            if(!vis[destination])
+                return false;
         }
         return true;
-    
     }
 };
