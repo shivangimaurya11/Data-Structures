@@ -1,43 +1,30 @@
 class Solution {
-    void mark_current_island(vector<vector<char>> &matrix,int x,int y,int r,int c)
-    {
-        if(x<0 || x>=r || y<0 || y>=c || matrix[x][y]!='1')  //Boundary case for matrix
-            return;
-        
-        //Mark current cell as visited
-        matrix[x][y] = '2';
-        
-        //Make recursive call in all 4 adjacent directions
-        mark_current_island(matrix,x+1,y,r,c);  //DOWN
-        mark_current_island(matrix,x,y+1,r,c);  //RIGHT
-        mark_current_island(matrix,x-1,y,r,c);  //TOP
-        mark_current_island(matrix,x,y-1,r,c);  //LEFT
-    }
 public:
+    void dfs(int i,int j,int row,int col,vector<vector<char>>&grid)
+    {
+        if(i<0||j<0||i>=row||j>=col||grid[i][j]!='1')
+            return;
+        grid[i][j]='2';
+        dfs(i-1,j,row,col,grid);
+        dfs(i+1,j,row,col,grid);
+        dfs(i,j-1,row,col,grid);
+        dfs(i,j+1,row,col,grid);
+    }
     int numIslands(vector<vector<char>>& grid) {
-        
-        //For FAST I/O
-        ios_base::sync_with_stdio(false);
-        cin.tie(NULL);
-        
-        int rows = grid.size();
-        if(rows==0)     //Empty grid boundary case
-            return 0;
-        int cols = grid[0].size();
-        
-        //Iterate for all cells of the array
-        int no_of_islands = 0;
-        for(int i=0;i<rows;++i)
+        int row=grid.size();
+        int col=grid[0].size();
+        int count=0;
+        for(int i=0;i<row;i++)
         {
-            for(int j=0;j<cols;++j)
+            for(int j=0;j<col;j++)
             {
                 if(grid[i][j]=='1')
                 {
-                    mark_current_island(grid,i,j,rows,cols);
-                    no_of_islands += 1;
+                    count++;
+                    dfs(i,j,row,col,grid);
                 }
             }
         }
-        return no_of_islands;
+        return count;
     }
 };
