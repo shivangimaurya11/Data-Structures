@@ -1,6 +1,6 @@
 class Solution {
 public:
-    void dfs(int node,vector<vector<int>>&adj,vector<int>&vis)
+    void dfs(int node,vector<int>adj[],vector<int>&vis)
     {
         vis[node]=1;
         for(auto it:adj[node])
@@ -10,7 +10,7 @@ public:
         }
     }
     bool validPath(int n, vector<vector<int>>& edges, int source, int destination) {
-        vector<vector<int>>adj(n);
+        vector<int>adj[n];
         for(int i=0;i<edges.size();i++)
         {
             adj[edges[i][0]].push_back(edges[i][1]);
