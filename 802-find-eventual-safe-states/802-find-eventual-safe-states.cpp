@@ -2,23 +2,21 @@ class Solution {
 public:
     bool dfs(int node,vector<vector<int>>&graph,vector<int>&vis,vector<int>&dfsvis,vector<bool>&cycle)
     {
-    vis[node]=1;
-        dfsvis[node] = 1;
-        
-        vector<int>data = graph[node];
-        for(auto x: data){
-            if(!vis[x]){
-                if(dfs(x,graph,vis,dfsvis,cycle)){
-                    return cycle[node] = true;
-                }
+        vis[node]=1;
+        dfsvis[node]=1;
+         vector<int>data = graph[node];
+        for(auto it:data)
+        {
+            if(!vis[it])
+            {
+                if(dfs(it,graph,vis,dfsvis,cycle))
+                   return cycle[node]=true;
             }
-            else if(vis[x] && dfsvis[x]){
-                return cycle[node] = true;
-            }
+            else if(dfsvis[it] && vis[it])
+                return cycle[node]=true;
         }
-        
-        dfsvis[node] = 0;
-        return false;
+        dfsvis[node]=0;
+            return false;
     }
     vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
         int n=graph.size();
